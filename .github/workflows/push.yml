@@ -18,20 +18,18 @@ jobs:
         with:
           go-version: '1.17.5' # The Go version to download (if necessary) and use.
           
-      - run: go get .
-      
-      - run: go build
+      - run: go build -o "dist\m3udownloader.exe"
       
       - name: Archive Release
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          path: ${{ github.event.repository.name }}.exe
+          directory: "dist"
           filename: "${{ env.targetZip }}"
           
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ env.targetZip }}"
+          artifacts: "dist/${{ env.targetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
