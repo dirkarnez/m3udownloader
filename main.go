@@ -5,8 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
-	"os/exec"
 	"strings"
 	"unicode/utf8"
 
@@ -27,14 +25,9 @@ func main() {
 		log.Fatal("No --url is given")
 	}
 
-	title, url, err := getTitle(url)
+	_, m3uURL, err := getTitle(url)
 	errExit(err)
-	log.Println(title, url)
-
-	FFmpegDownload(url, "title.mp4")
-	// unicode issue
-	// FFmpegDownload(url, fmt.Sprintf("%s.mp4", title))
-
+	fmt.Print(m3uURL)
 }
 
 func errExit(err error) {
@@ -102,17 +95,17 @@ func getTitle(urlstr string) (string, string, error) {
 	return title, url, err
 }
 
-//ffmpeg -i "%url%" "%filename%"
-func FFmpegDownload(url, filename string) error {
-	command := exec.Command("ffmpeg", "-i", url, filename)
-	command.Stdout = os.Stdout
+// //ffmpeg -i "%url%" "%filename%"
+// func FFmpegDownload(url  string) error {
+// 	command := exec.Command("ffmpeg", "-i", url, filename)
+// 	command.Stdout = os.Stdout
 
-	command.Stderr = os.Stderr
+// 	command.Stderr = os.Stderr
 
-	err := command.Start()
-	if err != nil {
-		return err
-	}
-	go command.Wait()
-	return nil
-}
+// 	err := command.Start()
+// 	if err != nil {
+// 		return err
+// 	}
+// 	go command.Wait()
+// 	return nil
+// }
