@@ -6,4 +6,5 @@ m3udownloader
 ### TODOs
 - [x] ~issue in (Unicode?) title passing to ffmpeg~
   - Just font issue
-    
+- [ ] Proxy support
+  - [dirkarnez/chromedp-proxy](https://github.com/dirkarnez/chromedp-proxy)
