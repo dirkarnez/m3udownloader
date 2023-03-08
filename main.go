@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"unicode/utf8"
 
@@ -50,7 +51,28 @@ func (w Transcoder) Write(b []byte) (n int, err error) {
 }
 
 func getTitle(urlstr string) (string, string, error) {
-	ctx, cancel := chromedp.NewContext(context.Background())
+	login := os.Getenv("PROXY_LOGIN")
+	password := os.Getenv("PROXY_PASSWORD")
+	proxy_addr := os.Getenv("PROXY_ADDR") //127.0.0.1:1080
+	schema := os.Getenv("PROXY_TYPE")     //socks5:// or http://
+
+	allocOpts := chromedp.DefaultExecAllocatorOptions[:]
+
+	var proxyURL string
+
+	if len(login) > 0 {
+		proxyURL = fmt.Sprintf("%s%s:%s@%s", schema, login, password, proxy_addr)
+	} else {
+		proxyURL = fmt.Sprintf("%s%s", schema, proxy_addr)
+	}
+
+	fmt.Println(proxyURL)
+
+	allocOpts = append(allocOpts, chromedp.ProxyServer(proxyURL))
+	actx, cancel := chromedp.NewExecAllocator(context.Background(), allocOpts...)
+	defer cancel()
+
+	ctx, cancel := chromedp.NewContext(actx)
 	defer cancel()
 
 	var title string
