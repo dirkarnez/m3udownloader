@@ -10,6 +10,6 @@ echo "You entered $filename"
 
 
 
-ffmpeg.exe -i "$(./m3udownloader.exe --url=$webURL)" "$filename" 
+ffmpeg.exe -i "$(./m3udownloader.exe --url=$webURL)" -c:v libx264 -c:a aac "$filename" 
 
 read -p "Done"
